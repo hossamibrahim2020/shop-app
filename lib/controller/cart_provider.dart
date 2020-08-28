@@ -1,21 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:fluttershopbloc/model/product_model.dart';
 
 class CartProvider extends ChangeNotifier {
-  List<CartProduct> _cartArray = [];
-  List get cartArray => _cartArray;
+  List<ProductModel> _cartArray = [];
+  List<ProductModel> get cartArray => _cartArray;
 
-  void addToCart(CartProduct product) {
+  void addToCart(ProductModel product) {
     _cartArray.add(product);
     notifyListeners();
   }
 
-  void removeFromCart(CartProduct product) {
-    _cartArray.add(product);
+  void removeFromCart(ProductModel product) {
+    _cartArray.remove(product);
     notifyListeners();
   }
-}
-
-class CartProduct {
-  String title, pieces, price, image;
-  CartProduct(this.title, this.image, this.price, this.pieces);
 }

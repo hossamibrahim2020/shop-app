@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttershopbloc/controller/cart_provider.dart';
+import 'package:flutter/services.dart';
+import '../controller/cart_provider.dart';
+import '../model/product_model.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 import '../shared/constants.dart';
@@ -33,7 +35,7 @@ class _DetailViewState extends State<DetailView> {
     );
   }
 
-  _headerStack(BuildContext context) {
+  Widget _headerStack(BuildContext context) {
     return Stack(
       children: <Widget>[
         _image(context),
@@ -144,8 +146,7 @@ class _DetailViewState extends State<DetailView> {
     );
   }
 
-  int numberOfProduct = 1;
-  _numberOfProduct(BuildContext context) {
+  Widget _numberOfProduct(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,18 +157,14 @@ class _DetailViewState extends State<DetailView> {
             color: Theme.of(context).accentColor,
             size: 35,
           ),
-          onPressed: () {
-            setState(() {
-              numberOfProduct++;
-            });
-          },
+          onPressed: () => _increment(),
         ),
         Container(
           height: 50,
           width: 50,
           child: Center(
             child: Text(
-              numberOfProduct.toString(),
+              _numberOfProductValue.toString(),
               style: kAppBarStyle,
             ),
           ),
@@ -184,37 +181,63 @@ class _DetailViewState extends State<DetailView> {
             color: Theme.of(context).accentColor,
             size: 35,
           ),
-          onPressed: () {
-            if (numberOfProduct > 1) {
-              setState(() {
-                numberOfProduct--;
-              });
-            } else {
-              Toast.show('cann\'t decrement', context);
-            }
-          },
+          onPressed: () => _decrement(context),
         ),
       ],
     );
   }
 
-  _addToCart(BuildContext context, final DocumentSnapshot data) {
+  int _numberOfProductValue = 1;
+  void _increment() {
+    return setState(() {
+      _numberOfProductValue++;
+    });
+  }
+
+  void _decrement(BuildContext context) {
+    if (_numberOfProductValue > 1) {
+      setState(() {
+        _numberOfProductValue--;
+      });
+    } else {
+      Toast.show('cann\'t decrement', context);
+    }
+  }
+
+  Widget _addToCart(BuildContext context, final DocumentSnapshot data) {
+    ProductModel _product = ProductModel(
+      '${data[ProductStrings.kAdminName]}',
+      '${data[ProductStrings.kName]}',
+      '${data[ProductStrings.kDescirption]}',
+      '${data[ProductStrings.kPrice]}',
+      '${data[ProductStrings.kTax]}',
+      '${data[ProductStrings.kSize]}',
+      '${data[ProductStrings.kimage]}',
+      _numberOfProductValue,
+    );
+    bool _addedBefore = false;
     return Consumer<CartProvider>(
       builder: (BuildContext context, CartProvider cart, Widget child) {
         return FlatButton(
           padding: const EdgeInsets.all(0.0),
           onPressed: () {
             try {
-              cart.addToCart(
-                CartProduct(
-                  '${data[ProductStrings.kName]}',
-                  '${data[ProductStrings.kimage]}',
-                  '${data[ProductStrings.kPrice]}',
-                  '$numberOfProduct',
-                ),
-              );
-              print('${cart.cartArray}');
-            } catch (e) {}
+              List<ProductModel> productsInCart = cart.cartArray;
+              for (var productInCart in productsInCart) {
+                if (productInCart.pname == _product.pname) {
+                  _addedBefore = true;
+                }
+              }
+              if (_addedBefore == true) {
+                Toast.show('This product added before', context);
+              } else {
+                cart.addToCart(_product);
+                Navigator.of(context).pop();
+                Toast.show('Added To Cart', context);
+              }
+            } on PlatformException catch (e) {
+              Toast.show('${e.message}', context);
+            }
           },
           child: Container(
             height: 70,

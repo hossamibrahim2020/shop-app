@@ -101,8 +101,16 @@ class _RegesterViewState extends State<RegesterView> {
                       label: regester,
                       color: Theme.of(context).accentColor,
                       onpress: () {
-                        _regesterController.regesterButton(context, _key,_email,_password,_isLodingModel);
+                        _regesterController.regesterButton(
+                          context,
+                          _key,
+                          _email,
+                          _password,
+                          _isLodingModel,
+                        );
                       },
+                      horizontal: 16,
+                      vertical: 20,
                     ),
                     FlatButton(
                       onPressed: () {

@@ -18,6 +18,8 @@ class AdminPannel extends StatelessWidget {
             onpress: () => Navigator.of(context).pushNamed(
               AddProduct.route,
             ),
+            horizontal: 16,
+            vertical: 20,
           ),
           CustomCircleButton(
             label: 'View Orders',
@@ -25,6 +27,8 @@ class AdminPannel extends StatelessWidget {
             onpress: () => Navigator.of(context).pushNamed(
               ViewOrders.route,
             ),
+            horizontal: 16,
+            vertical: 20,
           ),
         ],
       ),

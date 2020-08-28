@@ -5,15 +5,18 @@ class CustomCircleButton extends StatelessWidget {
   final Color color;
   final String label;
   final Function onpress;
+  final double horizontal, vertical;
   CustomCircleButton({
     @required this.label,
     @required this.color,
     @required this.onpress,
+    @required this.vertical,
+    @required this.horizontal,
   });
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
       child: FlatButton(
         onPressed: onpress,
         child: Container(

@@ -79,10 +79,13 @@ class _AddProductState extends State<AddProduct> {
             _tax.text,
             _size.text,
             _image.text,
+            0,
           );
           _store.addToStore(product);
         }
       },
+      horizontal: 16,
+      vertical: 20,
     );
   }
 

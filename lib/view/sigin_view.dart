@@ -94,8 +94,15 @@ class _SiginViewState extends State<SiginView> {
                       color: Theme.of(context).accentColor,
                       onpress: () {
                         _siginViewModel.regesterButton(
-                            context, _key, _email, _password, _isLodingModel);
+                          context,
+                          _key,
+                          _email,
+                          _password,
+                          _isLodingModel,
+                        );
                       },
+                      horizontal: 16,
+                      vertical: 20,
                     ),
                     FlatButton(
                       onPressed: () {
